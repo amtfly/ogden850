@@ -363,7 +363,7 @@ a.ledger-row:hover { background: var(--surface); text-decoration: none; }
 .flash-stage { max-width: 560px; margin: 30px auto 0; text-align: center; }
 .flash-meta { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; font-size: 13px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .flash-card {
-  position: relative; height: 300px; perspective: 1200px;
+  position: relative; height: 350px; perspective: 1200px;
   margin-bottom: 18px;
 }
 .flash-card .face {
@@ -379,6 +379,9 @@ a.ledger-row:hover { background: var(--surface); text-decoration: none; }
 .flash-card .fw { font-family: var(--font-word); font-size: clamp(36px, 7vw, 54px); font-weight: 700; }
 .flash-card .fzh { font-size: 24px; font-weight: 600; }
 .flash-card .fgrp { font-size: 12.5px; color: var(--ink-soft); }
+.flash-card .fex { font-size: 14px; line-height: 1.55; max-width: 24em; margin-top: 2px; }
+.flash-card .fex .en { display: block; font-family: var(--font-word); font-style: italic; }
+.flash-card .fex .zh { display: block; font-size: 12.5px; color: var(--ink-soft); }
 .flash-hint { font-size: 13px; color: var(--ink-soft); }
 .flash-controls { display: flex; justify-content: center; gap: 10px; }
 .kbd {

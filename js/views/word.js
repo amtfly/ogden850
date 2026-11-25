@@ -16,12 +16,10 @@ VIEWS.word = {
     const family = isIntl ? [] : Derive.familyOf(e);
     const srs = Store.srsEntry(e.w);
 
-    /* 例句中英拆分：ASCII 段为英文，其后为中文 */
+    /* 例句中英拆分 */
     let exHtml = '';
-    if (e.ex) {
-      const m = e.ex.match(/^([!-~][^一-鿿]*?)\s*([一-鿿].*)$/);
-      exHtml = `<div class="word-ex"><div class="en">${m ? m[1] : e.ex}</div><div class="zh">${m ? m[2] : ''}</div></div>`;
-    }
+    const ex = Util.splitEx(e.ex);
+    if (ex) exHtml = `<div class="word-ex"><div class="en">${ex.en}</div><div class="zh">${ex.zh}</div></div>`;
 
     const opp = e.opp && DataIndex.byWord.get(e.opp);
     const reverseOpp = !isIntl && DataIndex.words.find(x => x.opp === e.w);

@@ -33,10 +33,12 @@ VIEWS.flashcards = {
       const d = deck();
       if (state.pos >= d.length) state.pos = 0;
       const x = d[state.pos];
+      const ex = Util.splitEx(x.ex);
+      const exHtml = ex ? `<div class="fex"><span class="en">${ex.en}</span><span class="zh">${ex.zh}</span></div>` : '';
       const front = state.dir === 'en2zh' ? `<div class="fw">${x.w}</div>` : `<div class="fzh">${x.zh}</div>`;
       const back = state.dir === 'en2zh'
-        ? `<div class="fzh">${x.zh}</div>${x.ipa ? `<div class="ipa">${x.ipa}</div>` : ''}<div class="fgrp">${x.grp || DataIndex.cats.find(c => c.id === x.cat).name}</div>`
-        : `<div class="fw">${x.w}</div>${x.ipa ? `<div class="ipa">${x.ipa}</div>` : ''}<div class="fgrp">${x.grp || DataIndex.cats.find(c => c.id === x.cat).name}</div>`;
+        ? `<div class="fzh">${x.zh}</div>${x.ipa ? `<div class="ipa">${x.ipa}</div>` : ''}${exHtml}<div class="fgrp">${x.grp || DataIndex.cats.find(c => c.id === x.cat).name}</div>`
+        : `<div class="fw">${x.w}</div>${x.ipa ? `<div class="ipa">${x.ipa}</div>` : ''}${exHtml}<div class="fgrp">${x.grp || DataIndex.cats.find(c => c.id === x.cat).name}</div>`;
       const s = Store.strengthOf(x.w);
 
       host.innerHTML = `

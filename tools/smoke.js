@@ -33,7 +33,7 @@ const fs = require('fs');
 const files = ['js/data/operations.js','js/data/things.js','js/data/picturable.js','js/data/qualities.js',
   'js/data/international.js','js/data/phonetics.js','js/data/phonetics2.js',
   'js/data/examples_a.js','js/data/examples_b.js','js/data/examples_c.js','js/data/index.js',
-  'js/store.js','js/speech.js','js/derive.js',
+  'js/store.js','js/speech.js','js/derive.js','js/util.js',
   'js/views/home.js','js/views/words.js','js/views/word.js','js/views/flashcards.js','js/views/quiz.js',
   'js/views/review.js','js/views/expansion.js','js/views/grammar.js','js/views/about.js','js/views/progress.js',
   'js/router.js','js/app.js'];
@@ -145,6 +145,8 @@ check('data merge ipa/examples', () => {
   const book = DataIndex.byWord.get('book');
   if (!book.ipa) throw new Error('book 缺音标');
   if (!book.ex || !/book/i.test(book.ex)) throw new Error('book 缺例句');
+  const split = Util.splitEx(book.ex);
+  if (!split || !/book/i.test(split.en) || !split.zh) throw new Error('例句中英拆分失败');
   const come = DataIndex.byWord.get('come');
   if (come.ex !== 'Come here. 过来。') throw new Error('操作词自带例句应优先');
   if (DataIndex.intl.length !== 200) throw new Error('国际词应为 200');

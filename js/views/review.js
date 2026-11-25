@@ -46,6 +46,8 @@ VIEWS.review = {
       const e = DataIndex.byWord.get(due[state.i]);
       if (!e) { state.queue.splice(state.i, 1); render(); return; }
       const srs = Store.srsEntry(e.w) || { iv: 1, n: 0 };
+      const ex = Util.splitEx(e.ex);
+      const exHtml = ex ? `<div class="fex"><span class="en">${ex.en}</span><span class="zh">${ex.zh}</span></div>` : '';
 
       host.innerHTML = `
       <div class="flash-stage">
@@ -55,7 +57,7 @@ VIEWS.review = {
         </div>
         <div class="flash-card${state.flipped ? ' flipped' : ''}" id="rv-card" role="button" tabindex="0" aria-label="复习卡，点击翻面">
           <div class="face front"><div class="fw">${e.w}</div><div class="flash-hint">想起意思了吗？点击或按空格翻面</div></div>
-          <div class="face back"><div class="fzh">${e.zh}</div><div class="fgrp">${e.ipa || ''}</div>
+          <div class="face back"><div class="fzh">${e.zh}</div>${e.ipa ? `<div class="ipa">${e.ipa}</div>` : ''}${exHtml}
             <button class="say-btn" id="rv-say" title="发音">🔊</button>
           </div>
         </div>
