@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>奥格登 850 · 基础英语词库</title>
+<meta name="description" content="C. K. 奥格登 1930 年发明的 Basic English：850 个核心单词（600 名词、150 形容词、100 操作词）配 16 条语法规则。词表、闪卡、测验、词族扩展与奥格登生平。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23bf4a2b'/%3E%3Ctext x='32' y='42' font-family='Avenir Next,Futura,sans-serif' font-size='26' font-weight='600' fill='%23f7f8f4' text-anchor='middle'%3E850%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip" href="#main">跳到主要内容</a>
+
+<header class="site-head">
+  <a class="brand" href="#/">
+    <span class="brand-mark" aria-hidden="true">850</span>
+    <span class="brand-text">
+      <strong>BASIC ENGLISH</strong>
+      <span>奥格登基础英语词库</span>
+    </span>
+  </a>
+
+  <nav class="site-nav" aria-label="主导航">
+    <a href="#/" data-route="home">首页</a>
+    <a href="#/words" data-route="words">词表</a>
+    <a href="#/flashcards" data-route="flashcards">闪卡</a>
+    <a href="#/quiz" data-route="quiz">测验</a>
+    <a href="#/expansion" data-route="expansion">词族</a>
+    <a href="#/grammar" data-route="grammar">语法</a>
+    <a href="#/about" data-route="about">关于</a>
+  </nav>
+
+  <div class="head-tools">
+    <a class="head-progress" href="#/progress" data-route="progress" id="head-progress" title="学习进度">
+      <span class="head-progress-num" id="head-progress-num">0</span><span class="head-progress-den">/850</span>
+    </a>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换夜间模式">夜间</button>
+  </div>
+</header>
+
+<main id="main" class="view" tabindex="-1"></main>
+
+<footer class="site-foot">
+  <div class="foot-inner">
+    <p><strong>奥格登 850 基础英语词库</strong> — 依据 C. K. Ogden《Basic English: A General Introduction with Rules and Grammar》(1930) 的官方 850 词表编制。</p>
+    <p class="foot-src">词表来源：
+      <a href="https://simple.wikipedia.org/wiki/Wikipedia:Basic_English_ordered_wordlist" target="_blank" rel="noopener">Simple English Wikipedia · Ordered wordlist</a> ·
+      <a href="https://en.wikipedia.org/wiki/Charles_Kay_Ogden" target="_blank" rel="noopener">Charles Kay Ogden · Wikipedia</a>
+    </p>
+    <p class="foot-note">本站为语言学习用途。学习进度保存在你的浏览器本地（localStorage），不会上传。</p>
+  </div>
+</footer>
+
+<!-- 数据层 -->
+<script src="js/data/operations.js"></script>
+<script src="js/data/things.js"></script>
+<script src="js/data/picturable.js"></script>
+<script src="js/data/qualities.js"></script>
+<script src="js/data/index.js"></script>
+<!-- 工具层 -->
+<script src="js/store.js"></script>
+<script src="js/speech.js"></script>
+<script src="js/derive.js"></script>
+<!-- 视图层 -->
+<script src="js/views/home.js"></script>
+<script src="js/views/words.js"></script>
+<script src="js/views/word.js"></script>
+<script src="js/views/flashcards.js"></script>
+<script src="js/views/quiz.js"></script>
+<script src="js/views/expansion.js"></script>
+<script src="js/views/grammar.js"></script>
+<script src="js/views/about.js"></script>
+<script src="js/views/progress.js"></script>
+<!-- 应用层 -->
+<script src="js/router.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
