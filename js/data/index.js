@@ -1,6 +1,9 @@
 /* 数据索引 — 归一化 850 词，提供分类 / 查询 / 搜索 */
 (function () {
   const D = window.OGDEN_DATA;
+  /* 合并分片的音标与例句表 */
+  const PHONETICS = Object.assign({}, D.phonetics, D.phonetics2);
+  const EXAMPLES = Object.assign({}, D.examplesA, D.examplesB, D.examplesC);
   const CATS = [
     { id: 'ops',    no: 'Ⅰ', name: '操作词',       en: 'Operations',        key: 'operations', desc: '动词、方位词与连接词，句子的发动机——奥格登不叫它们动词，叫"操作词"。' },
     { id: 'things', no: 'Ⅱ', name: '名词·通用',    en: 'Things',            key: 'things',     desc: '一般事物与抽象概念，从"空气"到"政府"。' },
@@ -14,9 +17,9 @@
     list.forEach((r, i) => {
       if (catId === 'oppo') {
         /* opposites: [单词, 中文, 词表内反义词] */
-        words.push({ id: catId + '-' + i, w: r[0], zh: r[1], cat: catId, catNo, grp: '反义形容词', ex: null, opp: r[2] || null });
+        words.push({ id: catId + '-' + i, w: r[0], zh: r[1], cat: catId, catNo, grp: '反义形容词', ex: EXAMPLES[r[0]] || null, ipa: PHONETICS[r[0]] || null, opp: r[2] || null });
       } else {
-        words.push({ id: catId + '-' + i, w: r[0], zh: r[1], cat: catId, catNo, grp: r[2] || null, ex: r[3] || null, opp: null });
+        words.push({ id: catId + '-' + i, w: r[0], zh: r[1], cat: catId, catNo, grp: r[2] || null, ex: r[3] || EXAMPLES[r[0]] || null, ipa: PHONETICS[r[0]] || null, opp: null });
       }
     });
   }
@@ -39,6 +42,12 @@
     a.w.toLowerCase().localeCompare(b.w.toLowerCase(), 'en')
   );
 
+  /* 国际词补充清单（不在 850 内） */
+  const intl = (D.international || []).map((r, i) => ({
+    id: 'intl-' + i, w: r[0], zh: r[1], cat: 'intl', catNo: '附',
+    grp: '国际词', ex: null, ipa: PHONETICS[r[0]] || null, opp: null
+  }));
+
   function search(q) {
     q = q.trim().toLowerCase();
     if (!q) return [];
@@ -47,5 +56,5 @@
     ).slice(0, 200);
   }
 
-  window.DataIndex = { words, cats, alphabetical, byWord, search, count: words.length };
+  window.DataIndex = { words, cats, alphabetical, intl, byWord, search, count: words.length, intlCount: intl.length };
 })();

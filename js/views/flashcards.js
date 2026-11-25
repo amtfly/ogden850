@@ -35,8 +35,8 @@ VIEWS.flashcards = {
       const x = d[state.pos];
       const front = state.dir === 'en2zh' ? `<div class="fw">${x.w}</div>` : `<div class="fzh">${x.zh}</div>`;
       const back = state.dir === 'en2zh'
-        ? `<div class="fzh">${x.zh}</div><div class="fgrp">${x.grp || DataIndex.cats.find(c => c.id === x.cat).name}</div>`
-        : `<div class="fw">${x.w}</div><div class="fgrp">${x.grp || DataIndex.cats.find(c => c.id === x.cat).name}</div>`;
+        ? `<div class="fzh">${x.zh}</div>${x.ipa ? `<div class="ipa">${x.ipa}</div>` : ''}<div class="fgrp">${x.grp || DataIndex.cats.find(c => c.id === x.cat).name}</div>`
+        : `<div class="fw">${x.w}</div>${x.ipa ? `<div class="ipa">${x.ipa}</div>` : ''}<div class="fgrp">${x.grp || DataIndex.cats.find(c => c.id === x.cat).name}</div>`;
       const s = Store.strengthOf(x.w);
 
       host.innerHTML = `

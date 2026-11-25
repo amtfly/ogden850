@@ -6,6 +6,7 @@
   Router.add('word/:id', VIEWS.word);
   Router.add('flashcards', VIEWS.flashcards);
   Router.add('quiz', VIEWS.quiz);
+  Router.add('review', VIEWS.review);
   Router.add('expansion', VIEWS.expansion);
   Router.add('grammar', VIEWS.grammar);
   Router.add('about', VIEWS.about);
@@ -24,7 +25,7 @@
     applyTheme(next);
   });
 
-  /* 页眉进度 */
+  /* 页眉进度 + 复习角标 */
   const progEl = document.getElementById('head-progress');
   function refreshHeadProgress() {
     const s = Store.stats();
@@ -34,8 +35,15 @@
       progEl.classList.toggle('done', s.learned >= 850);
       progEl.title = `已学 ${s.learned} / 850（掌握 ${s.mastered}）`;
     }
+    const badge = document.getElementById('review-badge');
+    if (badge) {
+      const due = Store.srsDue().length;
+      badge.hidden = due === 0;
+      badge.textContent = due ? String(due) : '';
+    }
   }
   document.addEventListener('store:change', refreshHeadProgress);
+  window.addEventListener('hashchange', refreshHeadProgress);
   refreshHeadProgress();
 
   Router.start();

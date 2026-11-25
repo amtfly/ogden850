@@ -1,16 +1,20 @@
-/* 单词详情页 */
+/* 单词详情页 — 支持 850 词与国际词附表 */
 window.VIEWS = window.VIEWS || {};
 VIEWS.word = {
   title: '单词 · 奥格登 850',
   render(params) {
-    const e = DataIndex.words.find(x => x.id === params.id);
+    const isIntl = params.id.startsWith('intl-');
+    const e = DataIndex.words.find(x => x.id === params.id) || DataIndex.intl.find(x => x.id === params.id);
     if (!e) return '<div class="stub wrap">没有这个词条。<br><br><a class="btn" href="#/words">回到词表</a></div>';
     document.title = `${e.w} ${e.zh.split('；')[0]} · 奥格登 850`;
 
-    const c = DataIndex.cats.find(x => x.id === e.cat);
-    const s = Store.strengthOf(e.w);
+    const c = isIntl
+      ? { id: 'intl', no: '附', name: '国际词', en: 'International words', count: DataIndex.intlCount }
+      : DataIndex.cats.find(x => x.id === e.cat);
+    const s = isIntl ? 0 : Store.strengthOf(e.w);
     const starred = Store.isStarred(e.w);
-    const family = Derive.familyOf(e);
+    const family = isIntl ? [] : Derive.familyOf(e);
+    const srs = Store.srsEntry(e.w);
 
     /* 例句中英拆分：ASCII 段为英文，其后为中文 */
     let exHtml = '';
@@ -20,10 +24,10 @@ VIEWS.word = {
     }
 
     const opp = e.opp && DataIndex.byWord.get(e.opp);
-    const reverseOpp = DataIndex.words.find(x => x.opp === e.w);
-
-    const idx = c.words.findIndex(x => x.id === e.id);
-    const prev = c.words[idx - 1], next = c.words[idx + 1];
+    const reverseOpp = !isIntl && DataIndex.words.find(x => x.opp === e.w);
+    const list = isIntl ? DataIndex.intl : c.words;
+    const idx = list.findIndex(x => x.id === e.id);
+    const prev = list[idx - 1], next = list[idx + 1];
 
     return `
     <div class="wrap-narrow">
@@ -36,18 +40,23 @@ VIEWS.word = {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
           </button>
         </div>
-        <p class="phon">${c.en} · ${c.no} ${c.name}${e.grp ? ' · ' + e.grp : ''}</p>
+        <p class="phon">${e.ipa ? `<span class="ipa">${e.ipa}</span> · ` : ''}${c.en} · ${c.no} ${c.name}${e.grp ? ' · ' + e.grp : ''}</p>
         <p class="zh-meaning">${e.zh}</p>
+        ${isIntl ? '<p class="words-count-note">国际词：各欧洲语言通用，奥格登假定你已认识，不计入 850 词。</p>' : ''}
         ${opp ? `<p style="margin-top:8px">反义词：<a href="#/word/${opp.id}">${opp.w}（${opp.zh}）</a></p>` : ''}
         ${!opp && reverseOpp ? `<p style="margin-top:8px">反义词：<a href="#/word/${reverseOpp.id}">${reverseOpp.w}（${reverseOpp.zh}）</a></p>` : ''}
         ${exHtml}
+        ${!isIntl ? `
         <div class="word-meta">
           <span class="tag">学习状态 <b id="state-label">${s === 2 ? '掌握' : s === 1 ? '模糊' : '未学'}</b></span>
+          ${srs ? `<span class="tag">复习排期 <b>${srs.iv} 天后</b></span>` : ''}
         </div>
         <div class="word-actions">
           <button class="btn btn-sm mark-btn" data-s="2" ${s === 2 ? 'disabled' : ''}>掌握</button>
           <button class="btn btn-sm btn-quiet mark-btn" data-s="1" ${s === 1 ? 'disabled' : ''}>模糊</button>
           <button class="btn btn-sm btn-quiet mark-btn" data-s="0" ${s === 0 ? 'disabled' : ''}>未学</button>
+        </div>` : ''}
+        <div class="word-actions">
           <button class="btn btn-sm btn-quiet" id="star-btn">${starred ? '★ 在生词本' : '☆ 加入生词本'}</button>
         </div>
       </div>
@@ -73,7 +82,8 @@ VIEWS.word = {
   },
 
   mount(root) {
-    const e = DataIndex.words.find(x => x.id === location.hash.split('/')[2].split('?')[0]);
+    const id = location.hash.split('/')[2].split('?')[0];
+    const e = DataIndex.words.find(x => x.id === id) || DataIndex.intl.find(x => x.id === id);
     if (!e) return;
     root.querySelector('#say').addEventListener('click', () => Speak.say(e.w));
     root.querySelectorAll('.mark-btn').forEach(b => b.addEventListener('click', () => {

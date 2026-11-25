@@ -4,6 +4,7 @@ VIEWS.home = {
   title: '奥格登 850 · 基础英语词库',
   render() {
     const cats = (window.DataIndex && DataIndex.cats) || [];
+    const dueCount = (window.Store && Store.srsDue) ? Store.srsDue().length : 0;
     const cells = cats.map(c => `
       <a class="count-cell" href="#/words?cat=${c.id}" title="查看${c.name} ${c.count} 词">
         <span class="no">${c.no}</span>
@@ -53,6 +54,11 @@ VIEWS.home = {
           <span class="rl-desc">${c.desc}</span>
           <span class="rl-go">${c.count} 词</span>
         </a></li>`).join('')}
+        <li><a href="#/words?cat=intl">
+          <span class="rl-lead">附　国际词</span>
+          <span class="rl-desc">各欧洲语言通用的补充词汇，奥格登假定学习者已认识，不计入 850。</span>
+          <span class="rl-go">${DataIndex.intlCount} 词</span>
+        </a></li>
       </ul>
     </section>
 
@@ -68,6 +74,11 @@ VIEWS.home = {
           <span class="rl-lead">测验</span>
           <span class="rl-desc">中英双向选择题与拼写练习，成绩记入进度。</span>
           <span class="rl-go">去测验</span>
+        </a></li>
+        <li><a href="#/review">
+          <span class="rl-lead">复习</span>
+          <span class="rl-desc">间隔重复队列：学过的词按记忆曲线排期，到期自动出现${dueCount ? `，今天有 ${dueCount} 张到期` : ''}。</span>
+          <span class="rl-go">去复习</span>
         </a></li>
         <li><a href="#/expansion">
           <span class="rl-lead">词族扩展</span>

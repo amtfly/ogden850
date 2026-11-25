@@ -115,6 +115,20 @@ button { font: inherit; cursor: pointer; }
 }
 .theme-toggle:hover { color: var(--ink); border-color: var(--sage-deep); }
 
+#review-badge {
+  display: inline-block; min-width: 17px; text-align: center;
+  margin-left: 5px; padding: 0 5px;
+  background: var(--stamp); color: #fff;
+  border-radius: 9px; font-size: 11px; font-weight: 600;
+  line-height: 17px; vertical-align: 1px;
+}
+
+.ipa {
+  font-family: var(--font-word); font-style: normal;
+  color: var(--sage-deep); font-size: 17px;
+}
+.flash-card .ipa { color: var(--ink-soft); font-size: 16px; }
+
 /* ---------- 主体 ---------- */
 .view { min-height: calc(100vh - 220px); padding-bottom: 64px; }
 .view:focus { outline: none; }

@@ -13,6 +13,8 @@ VIEWS.progress = {
       const s = Store.stats();
       const byCat = Store.statsByCat(DataIndex.cats);
       const pct = Math.round(s.learned / 850 * 100);
+      const due = Store.srsDue().length;
+      const scheduled = Store.srsScheduled();
 
       const starredWords = DataIndex.words.filter(x => Store.isStarred(x.w));
       const log = Store.quizLog();
@@ -29,7 +31,11 @@ VIEWS.progress = {
         <div class="stat-cell"><div class="k">模糊</div><div class="v">${s.fuzzy}</div></div>
         <div class="stat-cell"><div class="k">生词本</div><div class="v">${s.starred}</div></div>
         <div class="stat-cell"><div class="k">测验轮数</div><div class="v">${s.quizzes}</div></div>
+        <div class="stat-cell"><div class="k">今日到期复习</div><div class="v">${due}</div></div>
+        <div class="stat-cell"><div class="k">已排期复习</div><div class="v">${scheduled}</div></div>
       </div>
+
+      ${due ? `<p><a class="btn btn-stamp" href="#/review">有 ${due} 张卡片到期，去复习 →</a></p>` : ''}
 
       <div class="overall-bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${pct}%"></i></div>
       <p class="words-count-note">总进度 ${pct}%（${s.learned}/850）</p>
@@ -60,6 +66,16 @@ VIEWS.progress = {
       </table>` : '<p class="empty-note">还没有测验记录——去 <a href="#/quiz">测验</a> 来一轮。</p>'}
 
       <div class="settings-block">
+        <h2 style="font-size:17px">备份与恢复</h2>
+        <p style="font-size:14px;color:var(--ink-soft)">把学习进度（含复习排期、生词本、测验记录）导出为 JSON 文件，或在别的设备导入恢复。</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-sm" id="export-btn">导出进度</button>
+          <button class="btn btn-sm btn-quiet" id="import-btn">导入进度</button>
+          <input type="file" id="import-file" accept=".json,application/json" hidden>
+        </div>
+      </div>
+
+      <div class="settings-block">
         <h2 style="font-size:17px">设置</h2>
         <p style="font-size:14px;color:var(--ink-soft)">清除所有学习进度、生词本与测验记录（不影响夜间模式设置）。</p>
         <button class="danger-btn" id="reset-btn">清除全部进度</button>
@@ -72,6 +88,39 @@ VIEWS.progress = {
           render();
         }
       });
+
+      const eb = host.querySelector('#export-btn');
+      if (eb) eb.addEventListener('click', () => {
+        const blob = new Blob([Store.exportData()], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'ogden850-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 500);
+      });
+
+      const impBtn = host.querySelector('#import-btn');
+      const impFile = host.querySelector('#import-file');
+      if (impBtn && impFile) {
+        impBtn.addEventListener('click', () => impFile.click());
+        impFile.addEventListener('change', async () => {
+          const file = impFile.files[0];
+          if (!file) return;
+          try {
+            const data = JSON.parse(await file.text());
+            if (confirm('导入会覆盖当前全部进度，确定继续？')) {
+              const ok = Store.importData(data);
+              alert(ok ? '导入完成。' : '文件格式不对：缺少 learned 字段。');
+              render();
+            }
+          } catch (err) {
+            alert('读取失败：这不是有效的 JSON 文件。');
+          }
+          impFile.value = '';
+        });
+      }
     }
 
     render();
